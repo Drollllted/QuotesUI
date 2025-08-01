@@ -7,33 +7,38 @@
 import SwiftUI
 
 struct QuotesCard: View {
+    @EnvironmentObject var vm: QuotesViewModel
+    let quoteIndex: Int
+    
     var body: some View {
         ZStack {
-            // Фон карточки
             RoundedRectangle(cornerRadius: 20)
                 .fill()
                 .foregroundStyle(.yellow)
                 .opacity(0.5)
                 .frame(width: 280, height: 280)
             
-            // Основное содержимое
-            VStack(alignment: .center) {
-                Text("Пусть тут будет какая то красивая цитата, для того чтобы проверить как квадрат отрабатывает")
-                    .font(.system(size: 14))
-                    .fontWeight(.semibold)
+            VStack(alignment: .center, spacing: 8) {
+                Text(vm.quotes[safe: quoteIndex]?.quote ?? "Loading quote...")
+                    .font(.system(size: 16, design: .rounded))
+                    .fontWeight(.medium)
                     .foregroundStyle(.gray)
-                    .lineLimit(10)
+                    .multilineTextAlignment(.center)
                     .frame(width: 240)
                     .padding(.top, 40)
-                    .offset(y: 50)
+
+                Text("- " + (vm.quotes[safe: quoteIndex]?.author ?? "Unknown"))
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundStyle(.black)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .padding(.trailing, 40)
                 
                 Spacer()
                 
-                // Кнопки в нижних углах
                 HStack {
-                    // Левая нижняя кнопка
                     Button {
-                        // Действие для кнопки
+                        
                     } label: {
                         Image(systemName: "bookmark")
                             .resizable()
@@ -46,25 +51,33 @@ struct QuotesCard: View {
                     
                     Spacer()
                     
-                    // Правая нижняя кнопка
                     Button {
-                        // Действие для кнопки
+                        vm.fetchQuotes()
                     } label: {
-                        Image("reload") // Убедитесь что у вас есть этот ассет
+                        Image(systemName: "arrow.clockwise")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 20, height: 20)
+                            .foregroundStyle(.gray)
                     }
                     .padding(.trailing, 20)
                     .padding(.bottom, 20)
                 }
             }
+            .frame(width: 280, height: 280)
         }
         .frame(width: 280, height: 280)
         .padding(10)
     }
 }
 
+extension Collection {
+    subscript(safe index: Index) -> Element? {
+        return indices.contains(index) ? self[index] : nil
+    }
+}
+
 #Preview {
-    QuotesCard()
+    QuotesCard(quoteIndex: 0)
+        .environmentObject(QuotesViewModel())
 }

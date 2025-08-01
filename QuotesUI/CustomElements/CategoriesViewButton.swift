@@ -9,18 +9,12 @@ import SwiftUI
 
 struct CategoriesViewButton: View {
     
-    var action: () -> Void
-    
     var body: some View {
-        Button {
-            action()
-        } label: {
-            Image(systemName: "rectangle.split.2x2")
-                .resizable()
-                .foregroundStyle(.black)
-                .bold()
-                .frame(width: 30, height: 30)
-        }
-
+        Image(systemName: "rectangle.split.2x2")
+            .resizable()
+            .foregroundStyle(.black)
+            .bold()
+            .frame(width: 30, height: 30)
+        
     }
 }
